@@ -43,6 +43,33 @@ window.addEventListener("load",() => {
 });
 
 frm.addEventListener("submit",(e) =>{
-    e.preventDefault();
+    e.preventDefault();//ecita envio do form
+
+    const poltrona = Number(frm.inPoltrona.value);//obtém conteúdo de inPoltrona
+
+    //valida o preenchimento do campo de entrada... não pode ser maior que a const
+    if(poltrona > POLTRONAS){
+        alert("Informe um número de poltrona válido");
+        frm.inPoltrona.focus();
+        return;
+    };
+    const ocupadas = localStorage.getItem("teatroOcuopadas") ? localStorage.getItem("teatroOcupadas").split(";") : [];
+    
+    //se a poltrona escolhida já está ocupada
+    if(ocupadas.includes(poltrona.toString())){
+        alert(`Poltrona ${poltrona} já está ocupada...`);
+        frm.inPoltrona.value = "";
+        frm.inPoltrona.focus();
+        return;
+    };
+
+    //captura a imagem da poltrona, filha de div palco.  è -1 pois começa em 0;
+    const imgPoltrona = dvPalco.querySelectorAll("img")[poltrona -1];
+    imgPoltrona.src = "./images/reservada.jpg" // modifica atributo da imagem
+
+    reservadas.push(poltrona); //adiciona poltrona ao vetor reservadas
+    frm.inPoltrona.value = "";//limpa campo
+    frm.inPoltrona.focus(); 
+
    
 });
