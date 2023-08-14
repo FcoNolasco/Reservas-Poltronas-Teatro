@@ -50,6 +50,7 @@ frm.addEventListener("submit",(e) =>{
     //valida o preenchimento do campo de entrada... não pode ser maior que a const
     if(poltrona > POLTRONAS){
         alert("Informe um número de poltrona válido");
+        frm.inPoltrona.value = "";
         frm.inPoltrona.focus();
         return;
     };
@@ -70,6 +71,29 @@ frm.addEventListener("submit",(e) =>{
     reservadas.push(poltrona); //adiciona poltrona ao vetor reservadas
     frm.inPoltrona.value = "";//limpa campo
     frm.inPoltrona.focus(); 
-
    
+});
+
+frm.btConfirmar.addEventListener("click", () =>{
+    if(reservadas.length == 0){
+        alert("Não há poltronas reservadas");
+        frm.inPoltrona.focus();
+        return;
+    }
+    const ocupadas = localStorage.getItem("teatroOcupadas") ? localStorage.getItem("teatroOcupadas").split(";") : [];
+
+    //for decrescente, poisas reservas vão sendo removidas a cada alteração da imagem
+    for(let i = reservadas.length -1; i >= 0; i--){
+        ocupadas.push(reservadas[i]);
+
+        //captura imagem da poltrona,filha de divPalco. è -1 pois começa em 0
+        const imgPoltrona = dvPalco.querySelectorAll("img")[reservadas[i]-1];
+
+        imgPoltrona.src = "./images/ocupada.jpg" // modifica o atributo da imagem
+
+        reservadas.pop(); //remove do vetor a reserva ja alterada
+
+    }; 
+
+    localStorage.setItem("teatroOcupadas",ocupadas.join(";"));
 });
